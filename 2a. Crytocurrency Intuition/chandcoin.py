@@ -122,12 +122,14 @@ def mine_block():
     previous_proof = previous_block['proof']
     proof = blockchain.proof_to_work(previous_proof)
     previous_hash = blockchain.hash(previous_block)
+    blockchain.add_transaction(sender = node_address, receiver = 'Ankit', amount = 1)
     block = blockchain.create_block(proof, previous_hash)
     response = {'message' : 'Congratulations you have mined a block!!',
                 'index' : block['index'],
                 'timestamp' : block['timestamp'],
                 'proof' : block['proof'],
-                'previous_hash' : block['previous_hash']}
+                'previous_hash' : block['previous_hash'],
+                'transactions' : block['transactions']}
     return jsonify(response), 200
 
 # Getting the full blockchain
@@ -149,6 +151,16 @@ def is_valid():
     return jsonify(response), 200
 
 
+# Adding a new transaction to blockchain
+@app.route('/add_transaction', methods = ['POST'])
+def add_transaction():
+    json = request.get_json()
+    transaction_keys = ['sender', 'receiver', 'amount']
+    if not all (key in json for key in transaction_keys):
+        return 'Some element of transaction missing', 400
+    index = blockchain.add_transaction(sender = json['sender'], receiver = json['receiver'], amount = json['amount'])
+    response = {'message' : f'This transaction will be added to block {index}'}
+    return jsonify(response), 201
 # Part 3: Decentralising the Blockchain
 
 
