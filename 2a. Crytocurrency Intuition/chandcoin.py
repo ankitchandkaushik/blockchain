@@ -109,6 +109,9 @@ class Blockchain:
 # Creating a web app
 app = Flask(__name__)
 
+# Creating address for node at port 5000
+node_address = str(uuid4()).replace('-', '')
+
 # Creating a blockchain
 blockchain = Blockchain()
 
