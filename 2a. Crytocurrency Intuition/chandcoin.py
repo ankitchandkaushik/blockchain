@@ -163,6 +163,18 @@ def add_transaction():
     return jsonify(response), 201
 # Part 3: Decentralising the Blockchain
 
+# Connecting new nodes
+@app.route('/connect_node', methods = ['POST'])
+def connect_node():
+    json = request.get_json()
+    nodes = json.get('nodes') #address of nodes
+    if nodes is None:
+        return 'No node', 400
+    for node in nodes:
+        blockchain.add_node(node)
+    response = {'message' : 'All nodes are now connected. The Chandcoin blockchain now contains the : ',
+                'total_nodes' : list(blockchain.nodes)}
+    return jsonify(response), 201
 
 # Running the app
 app.run(host = '0.0.0.0', port = 5000)
